@@ -1,9 +1,10 @@
 using UnityEngine;
 using Zenject;
 
-public class FooInstaller : Installer<FooInstaller>
+public class ProjectInstaller : MonoInstaller
 {
     public override void InstallBindings()
     {
+        DebugInstaller.Install(Container);
     }
 }
