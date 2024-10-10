@@ -6,5 +6,6 @@ public class ProjectInstaller : MonoInstaller
     public override void InstallBindings()
     {
         DebugInstaller.Install(Container);
+        CoreInstaller.Install(Container);
     }
 }
