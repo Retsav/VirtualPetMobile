@@ -14,7 +14,6 @@ public class MoodService : IMoodService
         if (_moods.Contains(baseMood))
             Debug.LogWarning($"{baseMood} is already registered");
         _moods.Add(baseMood);
-        Debug.Log($"{baseMood} registered.");
     }
 
     public void UnregisterMood(BaseMood baseMood)
@@ -22,7 +21,6 @@ public class MoodService : IMoodService
         if (!_moods.Contains(baseMood))
             Debug.LogWarning($"{baseMood} not in mood hashset!");
         _moods.Remove(baseMood);
-        Debug.Log($"{baseMood} unregistered.");
     }
 
     public void AddMoodModifier(MoodTypeEnum moodType, MoodModifier modifier) => MoodModifierAddedEventHandler?.Invoke(this, new OnMoodModifierAddedEventArgs(moodType, modifier));

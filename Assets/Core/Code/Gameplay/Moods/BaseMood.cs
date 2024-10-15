@@ -27,7 +27,6 @@ public abstract class BaseMood : MonoBehaviour
     {
         foreach (var moodModifier in ModifiersBuffer)
             if(moodModifier.isPersistent) Value += moodModifier.value * Time.deltaTime;
-        Debug.Log($"Persistent Modifier: {MoodType} recalculated. Value: {Value}");
     }
 
     public virtual void RecalculateStaticModifiers()
@@ -44,7 +43,6 @@ public abstract class BaseMood : MonoBehaviour
             if(!moodModifier.stayBuffered) modifiersToRemove.Add(moodModifier);
         }
         foreach (var removableModifier in modifiersToRemove) ModifiersBuffer.Remove(removableModifier);
-        Debug.Log($"Static Modifier: {MoodType} recalculated. Value: {Value}");
     }
 }
 
