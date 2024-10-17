@@ -44,7 +44,6 @@ public class RoomService : IRoomService
             return;
         }
         _currentActiveRoom = _rooms[j];
-        Debug.Log($"Switched rooms: {_currentActiveRoom.gameObject.name}");
         OnRoomChanged(_currentActiveRoom);
     }
     

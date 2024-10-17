@@ -7,5 +7,6 @@ public class CoreInstaller : Installer<CoreInstaller>
     {
         Container.Bind<IMoodService>().To<MoodService>().AsSingle();
         Container.Bind<IRoomService>().To<RoomService>().AsSingle();
+        Container.Bind<IInputService>().To<InputService>().AsSingle();
     }
 }
