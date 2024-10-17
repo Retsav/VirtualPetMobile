@@ -6,11 +6,16 @@ using Zenject;
 public class CleanMood : BaseMood
 {
     private IMoodService _moodService;
+    private IPetService _petService;
+
+    [SerializeField] private float _dirtThreshold;
+    private bool isDirty;
 
     [Inject]
-    private void ResolveDependencies(IMoodService moodService)
+    private void ResolveDependencies(IMoodService moodService, IPetService petService)
     {
         _moodService = moodService;
+        _petService = petService;
     }
 
     private void OnMoodModifierAdded(object sender, OnMoodModifierAddedEventArgs args)
@@ -19,6 +24,11 @@ public class CleanMood : BaseMood
             return;
         ModifiersBuffer.Add(args.Modifier);
         RecalculateStaticModifiers();
+        if (Value > _dirtThreshold && isDirty)
+        {
+            isDirty = false;
+            _petService.SetDirty(false);
+        }
     }
 
     private void OnMoodModifierRemoved(object sender, OnMoodModifierAddedEventArgs args)
@@ -30,6 +40,16 @@ public class CleanMood : BaseMood
         } 
         ModifiersBuffer.Remove(args.Modifier);
         RecalculateStaticModifiers();
+    }
+
+    public override void RecalculatePersistentModifiers()
+    {
+        base.RecalculatePersistentModifiers();
+        if (Value <= _dirtThreshold && !isDirty)
+        {
+            isDirty = true;
+            _petService.SetDirty(true);
+        } 
     }
 
     protected override void InitializeMood()

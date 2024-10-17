@@ -17,12 +17,15 @@ public class RoomSwipeManager : MonoBehaviour
     private Vector3 _currentCameraPosition;
 
     private IRoomService _roomService;
+    private IMinigameService _minigameService;
+    
     private Camera _mainCamera;
 
 
     [Inject]
-    private void ResolveDependencies(IRoomService roomService)
+    private void ResolveDependencies(IRoomService roomService, IMinigameService minigameService)
     {
+        _minigameService = minigameService;
         _roomService = roomService;
     }
     
@@ -35,6 +38,10 @@ public class RoomSwipeManager : MonoBehaviour
 
     void Update()
     {
+        if (_minigameService == null)
+            return;
+        if (_minigameService.IsInMinigame)
+            return;
         if (Input.touchCount == 1)
         {
             var touch = Input.GetTouch(0);

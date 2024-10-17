@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Zenject;
@@ -11,22 +12,63 @@ public class CleaningSystem : MonoBehaviour
     [SerializeField] private Texture2D brushTexture;
 
 
+    private bool canClean = false;
+
+
 
     private Texture2D orginalTexture; 
-    
     private Vector2 uv = Vector2.zero;
+    
     private IInputService _inputService;
+    private IMinigameService _minigameService;
+    private IMoodService _moodService;
 
     [Inject]
-    private void ResolveDependencies(IInputService inputService)
+    private void ResolveDependencies(IInputService inputService, IMinigameService minigameService, IMoodService moodService)
     {
         _inputService = inputService;
+        _minigameService = minigameService;
+        _minigameService.OnMinigameRequested += MinigameService_OnMinigameRequested;
+        _moodService = moodService;
+        HideDirty();
+    }
+
+    private void MinigameService_OnMinigameRequested(object sender, MinigameType e)
+    {
+        if (e != MinigameType.Cleaning)
+            return;
+        ActivateMinigame();
+    }
+
+    private void Start() => SetupTextureCopy();
+
+    public void ShowDirty()
+    {
+        dirtSpriteRenderer.DOFade(1f, .3f);
+        canClean = true;
+    }
+
+    public void HideDirty()
+    {
+        dirtSpriteRenderer.DOFade(0f, .3f);
+        canClean = false;
+        ResetTexture();
+    }
+
+    public void ActivateMinigame()
+    {
+        if (!canClean)
+            return;
+        _minigameService.SetInMinigame(true);
         _inputService.onSlideRaycastHit += OnSlideRaycastHit;
     }
 
-    private void Start()
+    public void FinishMinigame()
     {
-        SetupTextureCopy();
+        HideDirty();
+        _inputService.onSlideRaycastHit -= OnSlideRaycastHit;
+        _minigameService.SetInMinigame(false);
+        _moodService.AddMoodModifier(MoodTypeEnum.Klin, new MoodModifier(100, false));
     }
 
     private void SetupTextureCopy()
@@ -87,10 +129,17 @@ public class CleaningSystem : MonoBehaviour
         }
         
         float result = (float)alfaPixels / pixelsCountMax * 100f;
-        Debug.Log(result);
+        
+        //DEBUG
+        if (result > 70)
+        {
+            FinishMinigame();
+        }
+        
+        Debug.Log($"Cleaning: {result}%");
     }
 
-    private void ResetTexture()
+    public void ResetTexture()
     {
         Texture2D texture = dirtSpriteRenderer.sprite.texture;
         texture.SetPixels(orginalTexture.GetPixels());
@@ -101,5 +150,6 @@ public class CleaningSystem : MonoBehaviour
     {
         ResetTexture();
         _inputService.onSlideRaycastHit -= OnSlideRaycastHit;
+        _minigameService.OnMinigameRequested -= MinigameService_OnMinigameRequested;
     }
 }
