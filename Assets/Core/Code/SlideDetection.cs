@@ -52,7 +52,7 @@ public class SlideDetection : MonoBehaviour
         RaycastHit2D tempHit = Physics2D.Raycast(worldPoint, Vector2.zero, mask);
         if (tempHit.collider is not null)
         {
-            _inputService.OnSlideOnCollision(new OnSlideRaycastHitEventArgs(tempHit));
+            _inputService.OnSlideOnCollision(tempHit);
         }
     }
 }

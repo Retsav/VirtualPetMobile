@@ -6,7 +6,7 @@ using Zenject;
 
 public class PetController : MonoBehaviour
 {
-    [SerializeField] private CleaningSystem cleaningSystem;
+    [SerializeField] private CleaningMinigame cleaningSystem;
 
     private IPetService _petService;
 

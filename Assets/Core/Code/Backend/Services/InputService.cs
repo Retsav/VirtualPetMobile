@@ -5,6 +5,6 @@ using UnityEngine;
 
 public class InputService : IInputService
 {
-    public event EventHandler<OnSlideRaycastHitEventArgs> onSlideRaycastHit;
-    public void OnSlideOnCollision(OnSlideRaycastHitEventArgs args) => onSlideRaycastHit?.Invoke(this, args);
+    public event EventHandler<RaycastHit2D> onSlideRaycastHit;
+    public void OnSlideOnCollision(RaycastHit2D args) => onSlideRaycastHit?.Invoke(this, args);
 }

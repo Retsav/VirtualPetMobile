@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using Zenject;
 
-public class CleaningSystem : MonoBehaviour
+public class CleaningMinigame : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer dirtSpriteRenderer;
     [SerializeField] private Texture2D brushTexture;
@@ -28,9 +28,7 @@ public class CleaningSystem : MonoBehaviour
     {
         _inputService = inputService;
         _minigameService = minigameService;
-        _minigameService.OnMinigameRequested += MinigameService_OnMinigameRequested;
         _moodService = moodService;
-        HideDirty();
     }
 
     private void MinigameService_OnMinigameRequested(object sender, MinigameType e)
@@ -40,7 +38,13 @@ public class CleaningSystem : MonoBehaviour
         ActivateMinigame();
     }
 
-    private void Start() => SetupTextureCopy();
+    private void Start()
+    {
+        SetupTextureCopy();
+        HideDirty();
+        Vibration.Init();
+        _minigameService.OnMinigameRequested += MinigameService_OnMinigameRequested;
+    }
 
     public void ShowDirty()
     {
@@ -68,7 +72,7 @@ public class CleaningSystem : MonoBehaviour
         HideDirty();
         _inputService.onSlideRaycastHit -= OnSlideRaycastHit;
         _minigameService.SetInMinigame(false);
-        _moodService.AddMoodModifier(MoodTypeEnum.Klin, new MoodModifier(100, false));
+        _moodService.AddMoodModifier(MoodTypeEnum.Klin, new MoodModifier(30, false));
     }
 
     private void SetupTextureCopy()
@@ -79,9 +83,9 @@ public class CleaningSystem : MonoBehaviour
         orginalTexture.Apply();
     }
 
-    private void OnSlideRaycastHit(object sender, OnSlideRaycastHitEventArgs args)
+    private void OnSlideRaycastHit(object sender, RaycastHit2D args)
     {
-        RaycastHit2D hit = args.hit;
+        RaycastHit2D hit = args;
         Texture2D spriteTexture = dirtSpriteRenderer.sprite.texture;
         Vector2 localPoint = hit.point - (Vector2)hit.collider.transform.position;
         uv.x = localPoint.x / dirtSpriteRenderer.bounds.size.x + .5f;
@@ -112,6 +116,7 @@ public class CleaningSystem : MonoBehaviour
         }
         texture.Apply();
         RecalculateCleanPercent();
+        Vibration.VibratePop();
     }
 
     private void RecalculateCleanPercent()
@@ -135,7 +140,6 @@ public class CleaningSystem : MonoBehaviour
         {
             FinishMinigame();
         }
-        
         Debug.Log($"Cleaning: {result}%");
     }
 

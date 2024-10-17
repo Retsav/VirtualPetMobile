@@ -5,16 +5,8 @@ using UnityEngine;
 
 public interface IInputService
 {
-    public event EventHandler<OnSlideRaycastHitEventArgs> onSlideRaycastHit;
-    public void OnSlideOnCollision(OnSlideRaycastHitEventArgs args);
+    public event EventHandler<RaycastHit2D> onSlideRaycastHit;
+    public void OnSlideOnCollision(RaycastHit2D args);
 }
 
-public class OnSlideRaycastHitEventArgs : EventArgs
-{
-    public RaycastHit2D hit;
 
-    public OnSlideRaycastHitEventArgs(RaycastHit2D hit)
-    {
-        this.hit = hit;
-    }
-}

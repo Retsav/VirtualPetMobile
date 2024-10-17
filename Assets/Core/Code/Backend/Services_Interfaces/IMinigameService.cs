@@ -15,5 +15,6 @@ public interface IMinigameService
 public enum MinigameType
 {
     None,
-    Cleaning
+    Cleaning,
+    ThreeCups
 }
