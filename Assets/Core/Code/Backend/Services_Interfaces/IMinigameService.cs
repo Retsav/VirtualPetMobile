@@ -7,9 +7,24 @@ public interface IMinigameService
 {
     public bool IsInMinigame { get; set; } 
     public event EventHandler<MinigameType> OnMinigameRequested;
+    public event EventHandler<MinigamePointsUpdatedEventArgs> OnMinigamePointsUpdated;
+    public event EventHandler<MinigameType> OnMinigameOver;
+    
     public void RequestMinigame(MinigameType minigameType);
     public void SetInMinigame(bool isInMinigame);
     public bool GetIsInMinigame() => IsInMinigame;
+    public void OnPointsUpdated(MinigamePointsUpdatedEventArgs args);
+    public void OnGameOver(MinigameType minigameType);
+}
+
+public class MinigamePointsUpdatedEventArgs : EventArgs {
+    public MinigameType MinigameType;
+    public int Points;
+    public MinigamePointsUpdatedEventArgs(MinigameType minigameType, int points)
+    {
+        MinigameType = minigameType;
+        Points = points;
+    }
 }
 
 public enum MinigameType
