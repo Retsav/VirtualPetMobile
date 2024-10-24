@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 634518247355026939, guid: 9d234d5037d98ff4d972d1c95f2341a8, type: 3}
       propertyPath: m_Name
-      value: Playroom Variant
+      value: Playroom
       objectReference: {fileID: 0}
     - target: {fileID: 6745971227177819668, guid: 9d234d5037d98ff4d972d1c95f2341a8, type: 3}
       propertyPath: m_Color.b
@@ -64,8 +64,35 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -2824366880143314244, guid: 9d234d5037d98ff4d972d1c95f2341a8, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 634518247355026939, guid: 9d234d5037d98ff4d972d1c95f2341a8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -3237119445969654284}
   m_SourcePrefab: {fileID: 100100000, guid: 9d234d5037d98ff4d972d1c95f2341a8, type: 3}
+--- !u!212 &2468536188116385805 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 6745971227177819668, guid: 9d234d5037d98ff4d972d1c95f2341a8, type: 3}
+  m_PrefabInstance: {fileID: 9213381339132157465}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8580135162844992482 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 634518247355026939, guid: 9d234d5037d98ff4d972d1c95f2341a8, type: 3}
+  m_PrefabInstance: {fileID: 9213381339132157465}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &-3237119445969654284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8580135162844992482}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 633a7789f886a2649973399055d4bdbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _backgroundSprite: {fileID: 2468536188116385805}

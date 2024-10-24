@@ -35,16 +35,9 @@ public class ThreeCupsMinigame : MonoBehaviour
 
     private void Start()
     {
-        _minigameService.OnMinigameRequested += MinigameService_OnMinigameRequested;
         StartMinigame();
     }
-
-    private void MinigameService_OnMinigameRequested(object sender, MinigameType e)
-    {
-        if (e != MinigameType.ThreeCups && !_minigameService.IsInMinigame)
-            return;
-        StartMinigame();
-    }
+    
 
     private void StartMinigame()
     {
@@ -156,7 +149,6 @@ public class ThreeCupsMinigame : MonoBehaviour
 
     private void OnDestroy()
     {
-        _minigameService.OnMinigameRequested -= MinigameService_OnMinigameRequested;
         _inputService.onClickRaycastHit -= InputService_OnClickRaycastHit;
     }
     

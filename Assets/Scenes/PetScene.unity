@@ -505,7 +505,6 @@ GameObject:
   - component: {fileID: 1483843317}
   - component: {fileID: 1483843316}
   - component: {fileID: 1483843315}
-  - component: {fileID: 1483843318}
   - component: {fileID: 1483843319}
   m_Layer: 0
   m_Name: Main Camera
@@ -589,18 +588,6 @@ Transform:
   - {fileID: 555082392}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1483843318
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1483843314}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa45da92c19ac44479f3af18bd47ec23, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1483843319
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -613,9 +600,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dececfad5b76cd42bb4d4db4c69cd6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mask:
+  swipeMask:
     serializedVersion: 2
     m_Bits: 64
+  clickMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &1492000955
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,6 +10,7 @@ public interface IRoomService
     public List<Room> GetRooms();
     public int GetCurrentRoomIndex();
     public Room GetCurrentRoom();
+    public void ClearRooms();
     public void SwitchRooms(int index);
     
     public event EventHandler<OnRoomChangedEventArgs> RoomChangedEvent;
