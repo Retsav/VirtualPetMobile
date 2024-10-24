@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Zenject;
 
 public class SlideDetection : MonoBehaviour
@@ -10,7 +11,9 @@ public class SlideDetection : MonoBehaviour
     private Vector2 endPos;
     private Camera _camera;
     
-    [SerializeField] private LayerMask mask;
+    [FormerlySerializedAs("mask")] [SerializeField] private LayerMask swipeMask;
+    [SerializeField] private LayerMask clickMask;
+    
 
     private IInputService _inputService;
     
@@ -35,6 +38,7 @@ public class SlideDetection : MonoBehaviour
         {
             case TouchPhase.Began:
                 startPos = touch.position;
+                DetectClickOverCollider(startPos);
                 break;
             case TouchPhase.Moved:
                 DetectSwipeOverCollider(touch.position);
@@ -49,10 +53,20 @@ public class SlideDetection : MonoBehaviour
     private void DetectSwipeOverCollider(Vector2 touchPosition)
     {
         Vector2 worldPoint = _camera.ScreenToWorldPoint(touchPosition);
-        RaycastHit2D tempHit = Physics2D.Raycast(worldPoint, Vector2.zero, mask);
+        RaycastHit2D tempHit = Physics2D.Raycast(worldPoint, Vector2.zero, swipeMask);
         if (tempHit.collider is not null)
         {
             _inputService.OnSlideOnCollision(tempHit);
+        }
+    }
+
+    private void DetectClickOverCollider(Vector2 touchPosition)
+    {
+        Vector2 worldPoint = _camera.ScreenToWorldPoint(touchPosition);
+        RaycastHit2D tempHit = Physics2D.Raycast(worldPoint, Vector2.zero, clickMask);
+        if (tempHit.collider is not null)
+        {
+            _inputService.OnClickOnCollision(tempHit);
         }
     }
 }
