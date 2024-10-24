@@ -11,21 +11,32 @@ public class ThreeCupsMinigame : MonoBehaviour
     [SerializeField] private Transform cupContainer;
     [SerializeField] private List<Transform> cupsList;
     [SerializeField] private Transform cat;
+
+    [SerializeField] private float shuffleSpeed = .3f;
+    [SerializeField] private float shuffleInterval = .5f;
+
+    [SerializeField] private float yOffset = 5f;
+    private int points;
+
+
+    private bool _isShuffling = false; 
+    private Sequence sequence;
+    private int shufflesCount;
     
     private IMinigameService _minigameService;
-    private Sequence sequence;
+    private IInputService _inputService;
 
     [Inject]
-    private void ResolveDependecies(IMinigameService minigameService)
+    private void ResolveDependecies(IMinigameService minigameService, IInputService inputService)
     {
         _minigameService = minigameService;
+        _inputService = inputService;
     }
 
     private void Start()
     {
         _minigameService.OnMinigameRequested += MinigameService_OnMinigameRequested;
         StartMinigame();
-        sequence = DOTween.Sequence();
     }
 
     private void MinigameService_OnMinigameRequested(object sender, MinigameType e)
@@ -37,41 +48,96 @@ public class ThreeCupsMinigame : MonoBehaviour
 
     private void StartMinigame()
     {
+        _inputService.onClickRaycastHit += InputService_OnClickRaycastHit;
+        StartRound();
+    }
+
+    private void InputService_OnClickRaycastHit(object sender, RaycastHit2D hit)
+    {
+
+        if (_isShuffling)
+        {
+            return;
+        }
+        var isWin = false;
+        if (hit.transform.childCount > 1)
+        {
+            points++;
+            _minigameService.OnPointsUpdated(new MinigamePointsUpdatedEventArgs(MinigameType.ThreeCups, points));
+            isWin = true;
+        }
+        cat.parent = null;
+        sequence?.Kill();
+        sequence = DOTween.Sequence();
+        sequence.Append(cupContainer.DOMoveY(yOffset, .8f));
+        sequence.AppendInterval(0.5f);
+        sequence.AppendCallback(isWin ? StartRound : GameOver);
+    }
+
+    private void StartRound()
+    {
         cupContainer.DOMoveY(cat.localPosition.y, .8f).OnComplete(() =>
         {
             cat.transform.SetParent(cupsList[0].transform);
-            CalculateNextMove();
+            CalculateShuffles();
         });
+    }
+
+    private void GameOver()
+    {
+        _inputService.onClickRaycastHit -= InputService_OnClickRaycastHit;
+        _minigameService.OnGameOver(MinigameType.ThreeCups);
+        Debug.Log("YOU DIED.");
+    }
+
+    private void CalculateShuffles()
+    {
+        shufflesCount = Random.Range(1, 15);
+        _isShuffling = true;
+        CalculateNextMove();
     }
 
     private void CalculateNextMove()
     {
-        
-        int swapsCount = Random.Range(1, 5);
+        if (shufflesCount <= 0)
+        {
+            _isShuffling = false;
+            return;
+        }
         sequence?.Kill();
         sequence = DOTween.Sequence();
-        for (int i = 0; i < swapsCount; i++)
-        {
-            var cups = GetRandomCups();
-            ShuffleType type = GetRandomShuffleType();
-            switch (type)
-            {
-                case ShuffleType.Normal:
-                    var firstCupPosition = cups[0].position;
-                    sequence.Append(cups[0].DOMoveX(cups[1].position.x, .3f));
-                    sequence.Join(cups[1].DOMoveX(firstCupPosition.x, .3f));
-                    break;
-            }
-            sequence.AppendInterval(0.5f);
+        var cups = GetRandomCups();
+        ShuffleType type = GetRandomShuffleType();
+        var firstCupPosition = cups[0].position;
+        var secondCupPosition = cups[1].position; 
+        switch (type)
+        { 
+            case ShuffleType.Normal:
+                sequence.Append(cups[0].DOMoveX(secondCupPosition.x, shuffleSpeed)); 
+                sequence.Join(cups[1].DOMoveX(firstCupPosition.x, shuffleSpeed)); 
+                break;
+            case ShuffleType.Upwards:
+                sequence.Append(cups[0].DOMoveY(yOffset, shuffleSpeed));
+                sequence.Join(cups[1].DOMoveY(-yOffset, shuffleSpeed));
+                sequence.Append(cups[0].DOMoveX(secondCupPosition.x, shuffleSpeed)); 
+                sequence.Join(cups[1].DOMoveX(firstCupPosition.x, shuffleSpeed)); 
+                sequence.Append(cups[0].DOMoveY(secondCupPosition.y, shuffleSpeed));
+                sequence.Join(cups[1].DOMoveY(firstCupPosition.y, shuffleSpeed));
+                break;
         }
+
+        shufflesCount--;
+        sequence.AppendInterval(shuffleInterval);
+        sequence.AppendCallback(CalculateNextMove);
     }
+
+
 
     private ShuffleType GetRandomShuffleType()
     {
         var maxSize = Enum.GetValues(typeof(ShuffleType)).Length;
         var randomEnum = Random.Range(0, maxSize);
-        //return (ShuffleType)randomEnum;
-        return ShuffleType.Normal;
+        return (ShuffleType)randomEnum;
     }
 
     private Transform[] GetRandomCups()
@@ -91,12 +157,12 @@ public class ThreeCupsMinigame : MonoBehaviour
     private void OnDestroy()
     {
         _minigameService.OnMinigameRequested -= MinigameService_OnMinigameRequested;
+        _inputService.onClickRaycastHit -= InputService_OnClickRaycastHit;
     }
     
     
     public enum ShuffleType
     {
-        None,
         Normal,
         Upwards,
     }
