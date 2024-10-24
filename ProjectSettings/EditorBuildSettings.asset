@@ -11,4 +11,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/CoreUI.unity
     guid: 12927e99cb5529445aa5bcda86cef7f5
+  - enabled: 1
+    path: Assets/Scenes/Minigame_ThreeCups.unity
+    guid: 911f2dcec8d42be45a504d564c4e89fc
+  - enabled: 1
+    path: Assets/Scenes/ThreeCups_Minigame_UI.unity
+    guid: f01048e9eda0f5b4bbab031fe37aa694
+  - enabled: 1
+    path: Assets/Scenes/Backend.unity
+    guid: 13a563fb21eb6b14da8502d002fda42a
   m_configObjects: {}

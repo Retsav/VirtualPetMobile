@@ -13,12 +13,14 @@ public class BathroomUI : MonoBehaviour
     
     
     private IRoomService _roomService;
+    private IMinigameService _minigameService;
 
 
     [Inject]
-    private void ResolveDependencies(IRoomService roomService)
+    private void ResolveDependencies(IRoomService roomService, IMinigameService minigameService)
     {
         _roomService = roomService;
+        _minigameService = minigameService;
     }
 
     private void Start()
@@ -37,10 +39,7 @@ public class BathroomUI : MonoBehaviour
             _bathroomCanvasGroup.alpha = 1f;
     }
 
-    private void OnButtonClicked()
-    {
-        Debug.Log("Clicked!");
-    }
+    private void OnButtonClicked() => _minigameService.RequestMinigame(MinigameType.Cleaning);
 
 
     private void OnDestroy()
