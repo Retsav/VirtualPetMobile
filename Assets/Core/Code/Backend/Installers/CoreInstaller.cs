@@ -10,6 +10,6 @@ public class CoreInstaller : Installer<CoreInstaller>
         Container.Bind<IInputService>().To<InputService>().AsSingle();
         Container.Bind<IPetService>().To<PetService>().AsSingle();
         Container.Bind<IMinigameService>().To<MinigameService>().AsSingle();
-        
+        Container.Bind<ISceneManagmentService>().To<SceneManagmentService>().AsSingle();
     }
 }
