@@ -4,22 +4,24 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-public class PlayroomUI : MonoBehaviour
+public class BedroomUI : MonoBehaviour
 {
     [SerializeField] private Button _button;
-    [SerializeField] private CanvasGroup _playroomCanvasGroup;
+    [SerializeField] private CanvasGroup _bedroomroomCanvasGroup;
     
     
     
     private IRoomService _roomService;
     private IPopupService _popupService;
+    private IMoodService _moodService;
 
 
     [Inject]
-    private void ResolveDependencies(IRoomService roomService, IPopupService popupService)
+    private void ResolveDependencies(IRoomService roomService, IPopupService popupService, IMoodService moodService)
     {
         _roomService = roomService;
         _popupService = popupService;
+        _moodService = moodService;
     }
 
     private void Start()
@@ -30,20 +32,20 @@ public class PlayroomUI : MonoBehaviour
 
     private void OnRoomChanged(object sender, OnRoomChangedEventArgs args)
     {
-        if (args.RoomType is not PlayRoom)
+        if (args.RoomType is not BedRoom)
         {
-            if (_playroomCanvasGroup.alpha > 0)
+            if (_bedroomroomCanvasGroup.alpha > 0)
             {
-                _playroomCanvasGroup.alpha = 0f;
-                _playroomCanvasGroup.interactable = false;
-                _playroomCanvasGroup.blocksRaycasts = false;
+                _bedroomroomCanvasGroup.alpha = 0f;
+                _bedroomroomCanvasGroup.interactable = false;
+                _bedroomroomCanvasGroup.blocksRaycasts = false;
             }
         }
         else
         {
-            _playroomCanvasGroup.alpha = 1f;
-            _playroomCanvasGroup.interactable = true;
-            _playroomCanvasGroup.blocksRaycasts = true;
+            _bedroomroomCanvasGroup.alpha = 1f;
+            _bedroomroomCanvasGroup.interactable = true;
+            _bedroomroomCanvasGroup.blocksRaycasts = true;
         }
     }
 

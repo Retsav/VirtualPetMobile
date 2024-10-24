@@ -30,6 +30,8 @@ public class ThreeCupsUI : MonoBehaviour
         _minigameService.OnMinigamePointsUpdated += MinigameService_OnPointsUpdated;
         _minigameService.OnMinigameOver += MinigameService_OnGameOver;
         gameOverCanvasGroup.alpha = 0f;
+        gameOverCanvasGroup.interactable = false;
+        gameOverCanvasGroup.blocksRaycasts = false;
         retryButton.onClick.RemoveAllListeners();
         retryButton.onClick.AddListener(RetryMinigame);
         exitButton.onClick.RemoveAllListeners();
@@ -44,6 +46,8 @@ public class ThreeCupsUI : MonoBehaviour
         if (minigameType != MinigameType.ThreeCups)
             return;
         gameOverCanvasGroup.alpha = 1f;
+        gameOverCanvasGroup.blocksRaycasts = true;
+        gameOverCanvasGroup.interactable = true;
     }
 
     private void MinigameService_OnPointsUpdated(object sender, MinigamePointsUpdatedEventArgs e)
