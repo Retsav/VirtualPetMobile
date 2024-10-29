@@ -1,45 +1,61 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Zenject;
 
 public class BedroomUI : MonoBehaviour
 {
-    [SerializeField] private Button _button;
+    [SerializeField] private Button lampButton;
+    [SerializeField] private Image _lampImage;
+    
     [SerializeField] private CanvasGroup _bedroomroomCanvasGroup;
+    [SerializeField] private FadeUI fadeUI;
+
+    [SerializeField] private Sprite _lampOnSprite;
+    [SerializeField] private Sprite _lampOffSprite;
     
     
+    private bool _isLampOff = false;
+
+
+    private MoodModifier _moodModifier;
     
     private IRoomService _roomService;
-    private IPopupService _popupService;
     private IMoodService _moodService;
 
 
     [Inject]
-    private void ResolveDependencies(IRoomService roomService, IPopupService popupService, IMoodService moodService)
+    private void ResolveDependencies(IRoomService roomService, IMoodService moodService)
     {
         _roomService = roomService;
-        _popupService = popupService;
         _moodService = moodService;
     }
 
     private void Start()
     {
         _roomService.RoomChangedEvent += OnRoomChanged;
-        _button.onClick.AddListener(OnButtonClicked);
+        lampButton.onClick.AddListener(OnButtonClicked);
+        _moodModifier = new MoodModifier(2f, true, true);
     }
 
     private void OnRoomChanged(object sender, OnRoomChangedEventArgs args)
     {
         if (args.RoomType is not BedRoom)
         {
-            if (_bedroomroomCanvasGroup.alpha > 0)
+            if (_isLampOff)
             {
-                _bedroomroomCanvasGroup.alpha = 0f;
-                _bedroomroomCanvasGroup.interactable = false;
-                _bedroomroomCanvasGroup.blocksRaycasts = false;
+                fadeUI.Hide();
+                _isLampOff = false;
+                _lampImage.sprite = _lampOnSprite;
+                _moodService.RemoveMoodModifier(MoodTypeEnum.Sleep, _moodModifier);
             }
+            
+            if (!(_bedroomroomCanvasGroup.alpha > 0)) return;
+            _bedroomroomCanvasGroup.alpha = 0f;
+            _bedroomroomCanvasGroup.interactable = false;
+            _bedroomroomCanvasGroup.blocksRaycasts = false;
         }
         else
         {
@@ -49,12 +65,29 @@ public class BedroomUI : MonoBehaviour
         }
     }
 
-    private void OnButtonClicked() => _popupService.OnOpenMinigamePopupEvent();
+    private void OnButtonClicked()
+    {
+        if (!_isLampOff)
+        {
+            fadeUI.Show();
+            _isLampOff = true;
+            _lampImage.sprite = _lampOffSprite;
+            _moodService.AddMoodModifier(MoodTypeEnum.Sleep, _moodModifier);
+        }
+        else
+        {
+            fadeUI.Hide();
+            _isLampOff = false;
+            _lampImage.sprite = _lampOnSprite;
+            _moodService.RemoveMoodModifier(MoodTypeEnum.Sleep, _moodModifier);
+        }
+        
+    }
 
 
     private void OnDestroy()
     {
         _roomService.RoomChangedEvent -= OnRoomChanged;
-        _button.onClick.RemoveListener(OnButtonClicked);
+        lampButton.onClick.RemoveListener(OnButtonClicked);
     }
 }
