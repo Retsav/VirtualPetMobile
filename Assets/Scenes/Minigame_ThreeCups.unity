@@ -928,10 +928,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   swipeMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   clickMask:
     serializedVersion: 2
     m_Bits: 128
+  kitchenIngredientMask:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!1 &1602363065
 GameObject:
   m_ObjectHideFlags: 0
@@ -1080,8 +1083,8 @@ MonoBehaviour:
   - {fileID: 1355620696}
   - {fileID: 801211227}
   cat: {fileID: 187599597}
-  shuffleSpeed: 0.05
-  shuffleInterval: 0.1
+  shuffleSpeed: 0.3
+  shuffleInterval: 0.3
   yOffset: 2
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

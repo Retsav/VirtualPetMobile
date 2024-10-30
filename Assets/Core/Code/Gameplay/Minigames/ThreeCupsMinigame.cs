@@ -64,7 +64,10 @@ public class ThreeCupsMinigame : MonoBehaviour
         sequence = DOTween.Sequence();
         sequence.Append(cupContainer.DOMoveY(yOffset, .8f));
         sequence.AppendInterval(0.5f);
-        sequence.AppendCallback(isWin ? StartRound : GameOver);
+        if (isWin)
+            sequence.AppendCallback(StartRound);
+        else
+            sequence.AppendCallback(GameOver);
     }
 
     private void StartRound()
