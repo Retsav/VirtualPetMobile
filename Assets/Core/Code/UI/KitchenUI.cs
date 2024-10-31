@@ -52,4 +52,10 @@ public class KitchenUI : MonoBehaviour
     {
         _minigameService.RequestMinigame(MinigameType.Cauldron);
     }
+
+    private void OnDestroy()
+    {
+        minigameButton.onClick.RemoveAllListeners();
+        _roomService.RoomChangedEvent -= OnRoomChanged;
+    }
 }

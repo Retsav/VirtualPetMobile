@@ -13,13 +13,15 @@ public class PlayroomUI : MonoBehaviour
     
     private IRoomService _roomService;
     private IPopupService _popupService;
+    private IMinigameService _minigameService;
 
 
     [Inject]
-    private void ResolveDependencies(IRoomService roomService, IPopupService popupService)
+    private void ResolveDependencies(IRoomService roomService, IPopupService popupService, IMinigameService minigameService)
     {
         _roomService = roomService;
         _popupService = popupService;
+        _minigameService = minigameService;
     }
 
     private void Start()
@@ -47,7 +49,11 @@ public class PlayroomUI : MonoBehaviour
         }
     }
 
-    private void OnButtonClicked() => _popupService.OnOpenMinigamePopupEvent();
+    private void OnButtonClicked()
+    {
+        //_popupService.OnOpenMinigamePopupEvent();
+        _minigameService.RequestMinigame(MinigameType.ThreeCups);
+    }
 
 
     private void OnDestroy()

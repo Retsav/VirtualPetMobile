@@ -8,13 +8,10 @@ using Zenject;
 public class BedroomUI : MonoBehaviour
 {
     [SerializeField] private Button lampButton;
-    [SerializeField] private Image _lampImage;
     
     [SerializeField] private CanvasGroup _bedroomroomCanvasGroup;
     [SerializeField] private FadeUI fadeUI;
-
-    [SerializeField] private Sprite _lampOnSprite;
-    [SerializeField] private Sprite _lampOffSprite;
+    
     
     
     private bool _isLampOff = false;
@@ -48,7 +45,6 @@ public class BedroomUI : MonoBehaviour
             {
                 fadeUI.Hide();
                 _isLampOff = false;
-                _lampImage.sprite = _lampOnSprite;
                 _moodService.RemoveMoodModifier(MoodTypeEnum.Sleep, _moodModifier);
             }
             
@@ -71,14 +67,12 @@ public class BedroomUI : MonoBehaviour
         {
             fadeUI.Show();
             _isLampOff = true;
-            _lampImage.sprite = _lampOffSprite;
             _moodService.AddMoodModifier(MoodTypeEnum.Sleep, _moodModifier);
         }
         else
         {
             fadeUI.Hide();
             _isLampOff = false;
-            _lampImage.sprite = _lampOnSprite;
             _moodService.RemoveMoodModifier(MoodTypeEnum.Sleep, _moodModifier);
         }
         
