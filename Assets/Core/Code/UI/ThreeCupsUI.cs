@@ -54,7 +54,7 @@ public class ThreeCupsUI : MonoBehaviour
     {
         if (e.MinigameType != MinigameType.ThreeCups)
             return;
-        pointsLabel.text = $"{e.Points}";
+        pointsLabel.text = $"Score: {e.Points}";
     }
 
     private void OnDestroy()
