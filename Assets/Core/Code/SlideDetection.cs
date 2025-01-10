@@ -13,6 +13,8 @@ public class SlideDetection : MonoBehaviour
     
     [FormerlySerializedAs("mask")] [SerializeField] private LayerMask swipeMask;
     [SerializeField] private LayerMask clickMask;
+    [SerializeField] private LayerMask kitchenIngredientMask;
+    
     
 
     private IInputService _inputService;
@@ -39,14 +41,50 @@ public class SlideDetection : MonoBehaviour
             case TouchPhase.Began:
                 startPos = touch.position;
                 DetectClickOverCollider(startPos);
+                DetectClickOverKitchenCollider(startPos);
                 break;
             case TouchPhase.Moved:
                 DetectSwipeOverCollider(touch.position);
+                DetectSwipeOverKitchenCollider(touch.position);
                 break;
             case TouchPhase.Ended:
                 endPos = touch.position;
                 DetectSwipeOverCollider(endPos);
+                DetectTouchEndedOverKitchenCollider(endPos);
                 break;
+        }
+    }
+
+    private void DetectSwipeOverKitchenCollider(Vector2 touchPosition)
+    {
+        Vector2 worldPoint = _camera.ScreenToWorldPoint(touchPosition);
+        RaycastHit2D tempHit = Physics2D.Raycast(worldPoint, Vector2.zero, kitchenIngredientMask);
+        if (tempHit.collider is not null)
+        {
+            _inputService.OnSlideOnCollision(tempHit);
+        }
+    }
+
+    private void DetectClickOverKitchenCollider(Vector2 touchPosition)
+    {
+        Vector2 worldPoint = _camera.ScreenToWorldPoint(touchPosition);
+        RaycastHit2D tempHit = Physics2D.Raycast(worldPoint, Vector2.zero, Mathf.Infinity, kitchenIngredientMask);
+        if (tempHit.collider is not null)
+        {
+            _inputService.OnClickOnCollision(tempHit);
+        }
+    }
+    
+    
+    
+
+    private void DetectTouchEndedOverKitchenCollider(Vector2 touchPosition)
+    {
+        Vector2 worldPoint = _camera.ScreenToWorldPoint(touchPosition);
+        RaycastHit2D tempHit = Physics2D.Raycast(worldPoint, Vector2.zero, kitchenIngredientMask);
+        if (tempHit.collider is not null)
+        {
+            _inputService.OnEndTouchOnCollision(tempHit);
         }
     }
 

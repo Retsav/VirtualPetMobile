@@ -24,8 +24,11 @@ public class MoodService : IMoodService
     }
 
     public void AddMoodModifier(MoodTypeEnum moodType, MoodModifier modifier) => MoodModifierAddedEventHandler?.Invoke(this, new OnMoodModifierAddedEventArgs(moodType, modifier));
-    public void RemoveMoodModifier(MoodTypeEnum moodType, MoodModifier modifier) => MoodModifierRemovedEventHandler?.Invoke(this, new OnMoodModifierRemovedEventArgs(moodType, modifier));
-    
+    public void RemoveMoodModifier(MoodTypeEnum moodType, MoodModifier modifier)
+    {
+        MoodModifierRemovedEventHandler?.Invoke(this, new OnMoodModifierRemovedEventArgs(moodType, modifier));
+    }
+
     public BaseMood GetMood(MoodTypeEnum moodType)
     {
         foreach (var mood in _moods)

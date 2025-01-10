@@ -8,12 +8,35 @@ using Zenject;
 public class DebugBootstrap : MonoBehaviour
 {
     private ISceneManagmentService _sceneManager;
+    private IMinigameService _minigameService;
+    private IRoomService _roomService;
     
     
     [Inject]
-    private void ResolveDependencies(ISceneManagmentService sceneManager) => _sceneManager = sceneManager;
+    private void ResolveDependencies(ISceneManagmentService sceneManager, IMinigameService minigameService, IRoomService roomService)
+    {
+        _sceneManager = sceneManager;
+        _minigameService = minigameService;
+        _roomService = roomService;
+    }
 
-    private void Start() => _sceneManager.ChangeScene += SceneManager_OnChangeScene;
+    private void Start()
+    {
+        SceneManager_OnChangeScene(this, SceneType.MainGame);
+        _sceneManager.ChangeScene += SceneManager_OnChangeScene;
+        _minigameService.OnMinigameRequested += OnMinigameRequested;
+        
+    }
+
+    private void OnMinigameRequested(object sender, MinigameType e)
+    {
+        switch (e)
+        {
+            case MinigameType.ThreeCups:
+                SceneManager_OnChangeScene(this, SceneType.ThreeCups);
+                break;
+        }
+    }
 
     private void SceneManager_OnChangeScene(object sender, SceneType e) => StartCoroutine(UnloadScenesAndLoadNewScene(e));
 
@@ -39,6 +62,7 @@ public class DebugBootstrap : MonoBehaviour
         switch (scene)
         {
             case SceneType.MainGame:
+                _roomService.ClearRooms();
                 asyncOperations.Add(SceneManager.LoadSceneAsync(0, LoadSceneMode.Additive));
                 asyncOperations.Add(SceneManager.LoadSceneAsync(1, LoadSceneMode.Additive));
                 break;
@@ -54,9 +78,7 @@ public class DebugBootstrap : MonoBehaviour
         foreach (var asyncOperation in asyncOperations)
         {
             while (!asyncOperation.isDone)
-            {
                 yield return null;
-            }
         }
 
         switch (scene)
@@ -68,5 +90,11 @@ public class DebugBootstrap : MonoBehaviour
                 SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(2));
                 break;
         }
+    }
+
+    private void OnDestroy()
+    {
+        _sceneManager.ChangeScene -= SceneManager_OnChangeScene;
+        _minigameService.OnMinigameRequested -= OnMinigameRequested;
     }
 }

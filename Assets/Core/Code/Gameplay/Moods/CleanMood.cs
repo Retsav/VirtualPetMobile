@@ -24,14 +24,12 @@ public class CleanMood : BaseMood
             return;
         ModifiersBuffer.Add(args.Modifier);
         RecalculateStaticModifiers();
-        if (Value > _dirtThreshold && isDirty)
-        {
-            isDirty = false;
-            _petService.SetDirty(false);
-        }
+        if (!(Value > _dirtThreshold) || !isDirty) return;
+        isDirty = false;
+        _petService.SetDirty(false);
     }
 
-    private void OnMoodModifierRemoved(object sender, OnMoodModifierAddedEventArgs args)
+    private void OnMoodModifierRemoved(object sender, OnMoodModifierRemovedEventArgs args)
     {
         if (!ModifiersBuffer.Contains(args.Modifier))
         {
@@ -45,11 +43,9 @@ public class CleanMood : BaseMood
     public override void RecalculatePersistentModifiers()
     {
         base.RecalculatePersistentModifiers();
-        if (Value <= _dirtThreshold && !isDirty)
-        {
-            isDirty = true;
-            _petService.SetDirty(true);
-        } 
+        if (!(Value <= _dirtThreshold) || isDirty) return;
+        isDirty = true;
+        _petService.SetDirty(true);
     }
 
     protected override void InitializeMood()
@@ -60,11 +56,13 @@ public class CleanMood : BaseMood
         MaxValue = 100f;
         Value = MaxValue;
         _moodService.MoodModifierAddedEventHandler += OnMoodModifierAdded;
+        _moodService.MoodModifierRemovedEventHandler += OnMoodModifierRemoved;
     }
     
 
     private void OnDestroy()
     {
         _moodService.MoodModifierAddedEventHandler -= OnMoodModifierAdded;
+        _moodService.MoodModifierRemovedEventHandler -= OnMoodModifierRemoved;
     }
 }

@@ -33,10 +33,19 @@ public class BathroomUI : MonoBehaviour
     {
         if (args.RoomType is not BathRoom)
         {
-            if (_bathroomCanvasGroup.alpha > 0) _bathroomCanvasGroup.alpha = 0f;
+            if (_bathroomCanvasGroup.alpha > 0)
+            {
+                _bathroomCanvasGroup.alpha = 0f;
+                _bathroomCanvasGroup.interactable = false;
+                _bathroomCanvasGroup.blocksRaycasts = false;
+            }
         }
         else
+        {
             _bathroomCanvasGroup.alpha = 1f;
+            _bathroomCanvasGroup.interactable = true;
+            _bathroomCanvasGroup.blocksRaycasts = true;
+        }
     }
 
     private void OnButtonClicked() => _minigameService.RequestMinigame(MinigameType.Cleaning);
