@@ -35,16 +35,9 @@ public class ThreeCupsMinigame : MonoBehaviour
 
     private void Start()
     {
-        _minigameService.OnMinigameRequested += MinigameService_OnMinigameRequested;
         StartMinigame();
     }
-
-    private void MinigameService_OnMinigameRequested(object sender, MinigameType e)
-    {
-        if (e != MinigameType.ThreeCups && !_minigameService.IsInMinigame)
-            return;
-        StartMinigame();
-    }
+    
 
     private void StartMinigame()
     {
@@ -71,7 +64,10 @@ public class ThreeCupsMinigame : MonoBehaviour
         sequence = DOTween.Sequence();
         sequence.Append(cupContainer.DOMoveY(yOffset, .8f));
         sequence.AppendInterval(0.5f);
-        sequence.AppendCallback(isWin ? StartRound : GameOver);
+        if (isWin)
+            sequence.AppendCallback(StartRound);
+        else
+            sequence.AppendCallback(GameOver);
     }
 
     private void StartRound()
@@ -156,7 +152,6 @@ public class ThreeCupsMinigame : MonoBehaviour
 
     private void OnDestroy()
     {
-        _minigameService.OnMinigameRequested -= MinigameService_OnMinigameRequested;
         _inputService.onClickRaycastHit -= InputService_OnClickRaycastHit;
     }
     

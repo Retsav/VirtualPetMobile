@@ -10,7 +10,6 @@ using Zenject;
 
 public class MoodUI : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI moodTitleLabel;
     [SerializeField] private Image fillImage;
     [SerializeField] private MoodTypeEnum moodType;
 
@@ -30,22 +29,6 @@ public class MoodUI : MonoBehaviour
     private void Start()
     {
         //TODO: Change when repository will have mood name or somethin'
-        switch (moodType)
-        {
-            case MoodTypeEnum.Sleep:
-                moodTitleLabel.text = "SLEEP";
-                break;
-            case MoodTypeEnum.Happiness:
-                moodTitleLabel.text = "HAPPY";
-                break;
-            case MoodTypeEnum.Klin:
-                moodTitleLabel.text = "KLIN";
-                break;
-            case MoodTypeEnum.Hunger:
-                moodTitleLabel.text = "HUNGER";
-                break;
-        }
-
         mood = _moodService.GetMood(moodType);
     }
 

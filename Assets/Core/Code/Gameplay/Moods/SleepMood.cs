@@ -21,7 +21,7 @@ public class SleepMood : BaseMood
         RecalculateStaticModifiers();
     }
 
-    private void OnMoodModifierRemoved(object sender, OnMoodModifierAddedEventArgs args)
+    private void OnMoodModifierRemoved(object sender, OnMoodModifierRemovedEventArgs args)
     {
         if (!ModifiersBuffer.Contains(args.Modifier))
         {
@@ -40,11 +40,13 @@ public class SleepMood : BaseMood
         MaxValue = 100f;
         Value = MaxValue;
         _moodService.MoodModifierAddedEventHandler += OnMoodModifierAdded;
+        _moodService.MoodModifierRemovedEventHandler += OnMoodModifierRemoved;
     }
     
 
     private void OnDestroy()
     {
         _moodService.MoodModifierAddedEventHandler -= OnMoodModifierAdded;
+        _moodService.MoodModifierRemovedEventHandler -= OnMoodModifierRemoved;
     }
 }

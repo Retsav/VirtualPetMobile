@@ -26,6 +26,7 @@ public class RoomService : IRoomService
     public List<Room> GetRooms() => _rooms;
     public int GetCurrentRoomIndex() => _currentActiveRoom.GetRoomIndex();
     public Room GetCurrentRoom() => _currentActiveRoom;
+    public void ClearRooms() => _rooms.Clear();
 
     public void SwitchRooms(int index)
     {
@@ -46,6 +47,7 @@ public class RoomService : IRoomService
         _currentActiveRoom = _rooms[j];
         OnRoomChanged(_currentActiveRoom);
     }
+    
     
 
     public event EventHandler<OnRoomChangedEventArgs> RoomChangedEvent;

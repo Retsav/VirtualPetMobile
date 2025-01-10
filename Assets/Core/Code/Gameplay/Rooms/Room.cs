@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,7 +6,7 @@ using Zenject;
 
 public class Room : MonoBehaviour
 {
-    [SerializeField] private SpriteRenderer _backgroundSprite;
+    private SpriteRenderer _backgroundSprite;
     private int _roomIndex = -1;
 
     protected IRoomService _roomService;
@@ -14,6 +15,11 @@ public class Room : MonoBehaviour
     private void Construct(IRoomService roomService)
     {
         _roomService = roomService;
+    }
+
+    private void Awake()
+    {
+        _backgroundSprite = transform.GetComponentInChildren<SpriteRenderer>();
         _roomService.RegisterRoom(this);
     }
 
